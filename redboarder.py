@@ -18,23 +18,13 @@ def warpedfoo(image, pts):
 	return warped
 def changecolorandframe(img1):
 	BLUE = [255,0,0]
-	
 	constant= cv2.copyMakeBorder(img1,10,10,10,10,cv2.BORDER_CONSTANT,value=BLUE)
-
 	hsv = cv2.cvtColor(constant,cv2.COLOR_BGR2RGB)
 	plt.imshow(constant,'gray'),plt.title('CONSTANT')
 	plt.show()
 	return hsv
-def colordetection(color_changed):
-	# define the list of boundaries
-	boundaries = [
-		([34, 55, 100], [127, 151, 175]),
-		([27, 27, 27], [190, 181, 177]),
-		([103, 86, 65], [145, 133, 128]),
-		([160,20,70], [190,255,255])
-
-	]
-
+def colordetection(color_changed,boundaries):
+	# define the list of boundaries #boundaries = [([0, 0, 240], [10, 10, 255]),([100, 80, 60], [145, 135, 130])]
 	# loop over the boundaries
 	for (lower, upper) in boundaries:
 		# create NumPy arrays from the boundaries
@@ -48,12 +38,14 @@ def colordetection(color_changed):
 		_, contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 		
 		# show the images
-		cv2.imshow("mask", mask)
 		cv2.imshow("images", np.hstack([color_changed, colordet_img]))
 		cv2.waitKey(0)
 	return colordet_img
+
 img1 = warpedfoo(image, pts)
 color_changed = changecolorandframe(img1)
-colordet_img = colordetection(color_changed)
-cv2.imshow("Warped", color_changed)
+colordet_red = colordetection(color_changed,[([0, 0, 240], [10, 10, 255])])
+colordet_flower = colordetection(color_changed,[([100, 80, 60], [145, 135, 130])])
+cv2.imshow("Flower", colordet_flower)
+cv2.imshow("Red", colordet_red)
 cv2.waitKey(0)
