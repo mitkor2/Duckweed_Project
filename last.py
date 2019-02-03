@@ -3,15 +3,19 @@ from PIL import Image
 import numpy as np
 from matplotlib import pyplot as plt
 from pyimagesearch import four_point_transform
+from picamera import PiCamera
+from time import sleep
 # load the image and grab the source coordinates (i.e. the list of
 # of (x, y) points)
 # NOTE: using the 'eval' function is bad form, but for this example
 # let's just roll with it -- in future posts 
 # automatically determine the coordinates without pre-supplying them
-image = cv2.imread('threepots.png') 
-pts1 = np.array(eval('[(80, 296), (174, 269), (86, 323), (399, 329)]'), dtype = "float32")
+pts1 = np.array(eval('[(141, 68), (186, 71), (276, 473), (33, 478)]'), dtype = "float32")
 pts2 = np.array(eval('[(294, 272), (399, 270), (306, 334), (339, 329)]'), dtype = "float32")
-pts3 = np.array(eval('[(306, 334), (399, 329), (494, 273), (496, 331)]'), dtype = "float32")
+pts3 = np.array(eval('[(680, 74), (730, 90), (793, 467), (610, 462)]'), dtype = "float32")
+def camera():
+	camera = PiCamera()
+	camera.capture('threepots.png')
 def warpedfoo(image, pts):
 	# apply the four point tranform to obtain a "birds eye view" of
 	# the image
@@ -52,8 +56,8 @@ def determprocentege(path):
 	#print('black=' + str(black)+', red='+str(other_color))
 	covered_proc = 100*(float(other_color)/float((other_color+black)))
 	return covered_proc
-plt.imshow(image,'gray'),plt.title('CONSTANT')#1
-plt.show()
+camera()
+image = cv2.imread('threepots.png') 
 img1 = warpedfoo(image, pts1)
 img2 = warpedfoo(image, pts2)
 img3 = warpedfoo(image, pts3)
@@ -75,6 +79,7 @@ path3 = 'img3.jpg'
 precentage1 = determprocentege(path1)
 precentage2 = determprocentege(path2)
 precentage3 = determprocentege(path3)
-print(precentage1,precentage2,precentage3)
+#print(precentage1,precentage2,precentage3)
+print precentage1,",",precentage2,",",precentage3
 #cv2.imshow("Flower", colordet_flower)
-cv2.waitKey(0)
+#cv2.waitKey(0)
